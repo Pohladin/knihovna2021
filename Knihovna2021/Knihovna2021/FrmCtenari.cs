@@ -12,6 +12,9 @@ namespace Knihovna2021
  {
   private List<Ctenar> ctenari;
   private SqlRepository sqlRepository;
+  private string[] sloupce = new string[] { "IdCtenari", "Jmeno", "Prijmeni", "DatumNarozeni" };
+  private int sloupecTrideni = 0;
+  private bool sestupne;
 
   public FrmCtenari()
   {
@@ -21,11 +24,7 @@ namespace Knihovna2021
 
   private void FrmCtenari_Load(object sender, EventArgs e)
   {
-   ctenari = sqlRepository.NactiCtenare();
-   foreach (var ctenar in ctenari)
-   {
-    listView1.Items.Add(ctenar.GetListViewItem());
-   }
+   ZobrazData();
   }
 
   private void tsPridat_Click(object sender, EventArgs e)
@@ -33,12 +32,9 @@ namespace Knihovna2021
    FrmCtenariUpravy frmCtenariUpravy = new FrmCtenariUpravy(new Ctenar("", "", DateTime.Now));
    if (frmCtenariUpravy.ShowDialog() == DialogResult.OK)
    {
-    ctenari.Add(frmCtenariUpravy.Ctenar);
-    listView1.Items.Clear();
-    foreach (var ctenar in ctenari)
-    {
-     listView1.Items.Add(ctenar.GetListViewItem());
-    }
+    sqlRepository.UlozCtenare(frmCtenariUpravy.Ctenar);
+    //ctenari.Add(frmCtenariUpravy.Ctenar);
+    ZobrazData();
    }
   }
 
@@ -49,13 +45,74 @@ namespace Knihovna2021
     FrmCtenariUpravy frmCtenariUpravy = new FrmCtenariUpravy(ctenari[listView1.SelectedIndices[0]]);
     if (frmCtenariUpravy.ShowDialog() == DialogResult.OK)
     {
-     listView1.Items.Clear();
-     foreach (var ctenar in ctenari)
-     {
-      listView1.Items.Add(ctenar.GetListViewItem());
-     }
+     sqlRepository.UlozCtenare(frmCtenariUpravy.Ctenar);
+     ZobrazData();
     }
    }
+   else
+   {
+    MessageBox.Show("Vyberte záznam");
+   }
+  }
+
+  private void ZobrazData()
+  {
+   ctenari = sqlRepository.NactiCtenare(sloupce[sloupecTrideni],sestupne,tsHledat.Text);
+   listView1.Items.Clear();
+   foreach (var ctenar in ctenari)
+   {
+    listView1.Items.Add(ctenar.GetListViewItem());
+   }
+  }
+
+  private void tsSmazat_Click(object sender, EventArgs e)
+  {
+   if (listView1.SelectedIndices.Count > 0)
+   {
+    try
+    {
+     sqlRepository.SmazCtenare(ctenari[listView1.SelectedIndices[0]]);
+     ZobrazData();
+    }
+    catch
+    {
+     MessageBox.Show("Záznam nelze smazat");
+    }    
+   }
+   else
+   {
+    MessageBox.Show("Vyberte záznam");
+   }
+  }
+
+  private void listView1_ColumnClick(object sender, ColumnClickEventArgs e)
+  {
+   if (e.Column == sloupecTrideni)
+   {
+    sestupne = !sestupne;
+   }
+   sloupecTrideni = e.Column;
+   ZobrazData();
+   //switch (e.Column)
+   //{
+   // case 0:
+   //  this.Text = "IdCtenari";
+   //  break;
+   // case 1:
+   //  this.Text = "Jmeno";
+   //  break;
+   // case 2:
+   //  this.Text = "Prijmeni";
+   //  break;
+   // case 3:
+   //  this.Text = "DatumNarozeni";
+   //  break;
+   //}
+  }
+
+  private void tsHledat_TextChanged(object sender, EventArgs e)
+  {
+   ZobrazData();
   }
  }
 }

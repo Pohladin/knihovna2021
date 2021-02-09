@@ -38,6 +38,7 @@ namespace Knihovna2021
    this.hJmeno = new System.Windows.Forms.ColumnHeader();
    this.hPrijmeni = new System.Windows.Forms.ColumnHeader();
    this.hDatNar = new System.Windows.Forms.ColumnHeader();
+   this.tsHledat = new System.Windows.Forms.ToolStripTextBox();
    this.menuStrip1.SuspendLayout();
    this.SuspendLayout();
    // 
@@ -47,32 +48,34 @@ namespace Knihovna2021
    this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsPridat,
             this.tsUpravit,
-            this.tsSmazat});
+            this.tsSmazat,
+            this.tsHledat});
    this.menuStrip1.Location = new System.Drawing.Point(0, 0);
    this.menuStrip1.Name = "menuStrip1";
-   this.menuStrip1.Size = new System.Drawing.Size(921, 28);
+   this.menuStrip1.Size = new System.Drawing.Size(921, 31);
    this.menuStrip1.TabIndex = 0;
    this.menuStrip1.Text = "menuStrip1";
    // 
    // tsPridat
    // 
    this.tsPridat.Name = "tsPridat";
-   this.tsPridat.Size = new System.Drawing.Size(62, 24);
+   this.tsPridat.Size = new System.Drawing.Size(62, 27);
    this.tsPridat.Text = "Přidat";
    this.tsPridat.Click += new System.EventHandler(this.tsPridat_Click);
    // 
    // tsUpravit
    // 
    this.tsUpravit.Name = "tsUpravit";
-   this.tsUpravit.Size = new System.Drawing.Size(71, 24);
+   this.tsUpravit.Size = new System.Drawing.Size(71, 27);
    this.tsUpravit.Text = "Upravit";
    this.tsUpravit.Click += new System.EventHandler(this.tsUpravit_Click);
    // 
    // tsSmazat
    // 
    this.tsSmazat.Name = "tsSmazat";
-   this.tsSmazat.Size = new System.Drawing.Size(72, 24);
+   this.tsSmazat.Size = new System.Drawing.Size(72, 27);
    this.tsSmazat.Text = "Smazat";
+   this.tsSmazat.Click += new System.EventHandler(this.tsSmazat_Click);
    // 
    // listView1
    // 
@@ -85,13 +88,14 @@ namespace Knihovna2021
    this.listView1.FullRowSelect = true;
    this.listView1.GridLines = true;
    this.listView1.HideSelection = false;
-   this.listView1.Location = new System.Drawing.Point(0, 28);
+   this.listView1.Location = new System.Drawing.Point(0, 31);
    this.listView1.MultiSelect = false;
    this.listView1.Name = "listView1";
-   this.listView1.Size = new System.Drawing.Size(921, 585);
+   this.listView1.Size = new System.Drawing.Size(921, 582);
    this.listView1.TabIndex = 1;
    this.listView1.UseCompatibleStateImageBehavior = false;
    this.listView1.View = System.Windows.Forms.View.Details;
+   this.listView1.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listView1_ColumnClick);
    // 
    // hIdCtenar
    // 
@@ -108,6 +112,12 @@ namespace Knihovna2021
    // hDatNar
    // 
    this.hDatNar.Text = "Datum narození";
+   // 
+   // tsHledat
+   // 
+   this.tsHledat.Name = "tsHledat";
+   this.tsHledat.Size = new System.Drawing.Size(100, 27);
+   this.tsHledat.TextChanged += new System.EventHandler(this.tsHledat_TextChanged);
    // 
    // FrmCtenari
    // 
@@ -137,5 +147,6 @@ namespace Knihovna2021
   private System.Windows.Forms.ColumnHeader hJmeno;
   private System.Windows.Forms.ColumnHeader hPrijmeni;
   private System.Windows.Forms.ColumnHeader hDatNar;
+  private System.Windows.Forms.ToolStripTextBox tsHledat;
  }
 }
