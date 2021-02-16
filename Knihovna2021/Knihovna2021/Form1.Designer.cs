@@ -57,6 +57,7 @@ namespace Knihovna2021
    // 
    // btnVypujcky
    // 
+   this.btnVypujcky.Enabled = false;
    this.btnVypujcky.Location = new System.Drawing.Point(403, 25);
    this.btnVypujcky.Name = "btnVypujcky";
    this.btnVypujcky.Size = new System.Drawing.Size(181, 127);

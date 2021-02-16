@@ -76,7 +76,7 @@ namespace Knihovna2021
      }
     }
    }
-  }
+  }  
 
   public void SmazCtenare(Ctenar ctenar)
   {
@@ -101,6 +101,84 @@ namespace Knihovna2021
     {
      sqlCommand.CommandText = $"select * from Knihy where Nazev like @Hledani order by {sloupecTrideni}{(sestupne ? " desc" : "")}";
      sqlCommand.Parameters.AddWithValue("Hledani", "%" + hledani + "%");
+     sqlConnection.Open();
+     using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
+     {
+      while (dataReader.Read())
+      {
+       knihy.Add(new Kniha(Convert.ToInt32(dataReader["IdKnihy"]),
+                              dataReader["Nazev"].ToString(),
+                              dataReader["Autor"].ToString(),
+                              Convert.ToInt32(dataReader["PocetStran"]),
+                              dataReader["Zanr"].ToString()));
+      }
+     }
+     sqlConnection.Close();
+    }
+   }
+   return knihy;
+  }
+
+  public List<Kniha> NactiKnihyNevypujcene()
+  {
+   List<Kniha> knihy = new List<Kniha>();
+   using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+   {
+    using (SqlCommand sqlCommand = new SqlCommand("", sqlConnection))
+    {
+     sqlCommand.CommandText = $"select * from Knihy where IdKnihy not in (select k.IdKnihy from Vypujcky v join Knihy k on v.IdKnihy=k.IdKnihy where v.DatumVraceni is null)";
+     sqlConnection.Open();
+     using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
+     {
+      while (dataReader.Read())
+      {
+       knihy.Add(new Kniha(Convert.ToInt32(dataReader["IdKnihy"]),
+                              dataReader["Nazev"].ToString(),
+                              dataReader["Autor"].ToString(),
+                              Convert.ToInt32(dataReader["PocetStran"]),
+                              dataReader["Zanr"].ToString()));
+      }
+     }
+     sqlConnection.Close();
+    }
+   }
+   return knihy;
+  }
+
+  public List<Kniha> NactiKnihyVypujcene(Ctenar ctenar)
+  {
+   List<Kniha> knihy = new List<Kniha>();
+   using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+   {
+    using (SqlCommand sqlCommand = new SqlCommand("", sqlConnection))
+    {
+     sqlCommand.CommandText = $"select k.* from Vypujcky v join Knihy k on v.IdKnihy=k.IdKnihy join Ctenari c on v.IdCtenari=c.IdCtenari where v.DatumVraceni is null and c.IdCtenari={ctenar.Id}";
+     sqlConnection.Open();
+     using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
+     {
+      while (dataReader.Read())
+      {
+       knihy.Add(new Kniha(Convert.ToInt32(dataReader["IdKnihy"]),
+                              dataReader["Nazev"].ToString(),
+                              dataReader["Autor"].ToString(),
+                              Convert.ToInt32(dataReader["PocetStran"]),
+                              dataReader["Zanr"].ToString()));
+      }
+     }
+     sqlConnection.Close();
+    }
+   }
+   return knihy;
+  }
+
+  public List<Kniha> NactiKnihyVypujcene()
+  {
+   List<Kniha> knihy = new List<Kniha>();
+   using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+   {
+    using (SqlCommand sqlCommand = new SqlCommand("", sqlConnection))
+    {
+     sqlCommand.CommandText = $"select k.* from Vypujcky v join Knihy k on v.IdKnihy=k.IdKnihy where v.DatumVraceni is null";
      sqlConnection.Open();
      using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
      {
@@ -170,5 +248,48 @@ namespace Knihovna2021
     }
    }
   }
+
+  public void VypujcKnihu(Ctenar ctenar, Kniha kniha)
+  {
+   using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+   {
+    using (SqlCommand sqlCommand = new SqlCommand("", sqlConnection))
+    {
+     sqlCommand.CommandText = $"insert into Vypujcky(IdCtenari,IdKnihy,DatumVypujceni) values({ctenar.Id},{kniha.Id},getdate())";
+     sqlConnection.Open();
+     sqlCommand.ExecuteNonQuery();
+     sqlConnection.Close();
+    }
+   }
+  }
+    
+  public void VratKnihu(Ctenar ctenar, Kniha kniha)
+  {
+   using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+   {
+    using (SqlCommand sqlCommand = new SqlCommand("", sqlConnection))
+    {
+     sqlCommand.CommandText = $"update Vypujcky set DatumVraceni=getdate() where IdCtenari={ctenar.Id} and IdKnihy={kniha.Id} and DatumVraceni is null";
+     sqlConnection.Open();
+     sqlCommand.ExecuteNonQuery();
+     sqlConnection.Close();
+    }
+   }
+  }
+
+  public void StornoVypujcky(Ctenar ctenar, Kniha kniha)
+  {
+   using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+   {
+    using (SqlCommand sqlCommand = new SqlCommand("", sqlConnection))
+    {
+     sqlCommand.CommandText = $"delete from Vypujcky where IdCtenari={ctenar.Id} and IdKnihy={kniha.Id} and DatumVraceni is null";
+     sqlConnection.Open();
+     sqlCommand.ExecuteNonQuery();
+     sqlConnection.Close();
+    }
+   }
+  }
+
  }
 }

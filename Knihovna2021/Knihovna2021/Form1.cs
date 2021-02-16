@@ -31,8 +31,8 @@ namespace Knihovna2021
 
   private void btnVypujcky_Click(object sender, EventArgs e)
   {
-   FrmVypujcky frmVypujcky = new FrmVypujcky();
-   frmVypujcky.ShowDialog();
+   //FrmVypujcky frmVypujcky = new FrmVypujcky();
+   //frmVypujcky.ShowDialog();
   }
 
   private void btnStatistiky_Click(object sender, EventArgs e)

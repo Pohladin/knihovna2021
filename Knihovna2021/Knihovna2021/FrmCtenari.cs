@@ -57,7 +57,7 @@ namespace Knihovna2021
 
   private void ZobrazData()
   {
-   ctenari = sqlRepository.NactiCtenare(sloupce[sloupecTrideni],sestupne,tsHledat.Text);
+   ctenari = sqlRepository.NactiCtenare(sloupce[sloupecTrideni], sestupne, tsHledat.Text);
    listView1.Items.Clear();
    foreach (var ctenar in ctenari)
    {
@@ -77,7 +77,7 @@ namespace Knihovna2021
     catch
     {
      MessageBox.Show("Záznam nelze smazat");
-    }    
+    }
    }
    else
    {
@@ -113,6 +113,15 @@ namespace Knihovna2021
   private void tsHledat_TextChanged(object sender, EventArgs e)
   {
    ZobrazData();
+  }
+
+  private void tsSpravaVypujcek_Click(object sender, EventArgs e)
+  {
+   if (listView1.SelectedIndices.Count > 0)
+   {
+    FrmVypujcky frmVypujcky = new FrmVypujcky(ctenari[listView1.SelectedIndices[0]]);
+    frmVypujcky.ShowDialog();
+   }
   }
  }
 }

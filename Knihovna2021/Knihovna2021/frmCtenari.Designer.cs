@@ -33,12 +33,13 @@ namespace Knihovna2021
    this.tsPridat = new System.Windows.Forms.ToolStripMenuItem();
    this.tsUpravit = new System.Windows.Forms.ToolStripMenuItem();
    this.tsSmazat = new System.Windows.Forms.ToolStripMenuItem();
+   this.tsHledat = new System.Windows.Forms.ToolStripTextBox();
    this.listView1 = new System.Windows.Forms.ListView();
    this.hIdCtenar = new System.Windows.Forms.ColumnHeader();
    this.hJmeno = new System.Windows.Forms.ColumnHeader();
    this.hPrijmeni = new System.Windows.Forms.ColumnHeader();
    this.hDatNar = new System.Windows.Forms.ColumnHeader();
-   this.tsHledat = new System.Windows.Forms.ToolStripTextBox();
+   this.tsSpravaVypujcek = new System.Windows.Forms.ToolStripMenuItem();
    this.menuStrip1.SuspendLayout();
    this.SuspendLayout();
    // 
@@ -49,7 +50,8 @@ namespace Knihovna2021
             this.tsPridat,
             this.tsUpravit,
             this.tsSmazat,
-            this.tsHledat});
+            this.tsHledat,
+            this.tsSpravaVypujcek});
    this.menuStrip1.Location = new System.Drawing.Point(0, 0);
    this.menuStrip1.Name = "menuStrip1";
    this.menuStrip1.Size = new System.Drawing.Size(921, 31);
@@ -76,6 +78,12 @@ namespace Knihovna2021
    this.tsSmazat.Size = new System.Drawing.Size(72, 27);
    this.tsSmazat.Text = "Smazat";
    this.tsSmazat.Click += new System.EventHandler(this.tsSmazat_Click);
+   // 
+   // tsHledat
+   // 
+   this.tsHledat.Name = "tsHledat";
+   this.tsHledat.Size = new System.Drawing.Size(100, 27);
+   this.tsHledat.TextChanged += new System.EventHandler(this.tsHledat_TextChanged);
    // 
    // listView1
    // 
@@ -113,11 +121,12 @@ namespace Knihovna2021
    // 
    this.hDatNar.Text = "Datum narození";
    // 
-   // tsHledat
+   // tsSpravaVypujcek
    // 
-   this.tsHledat.Name = "tsHledat";
-   this.tsHledat.Size = new System.Drawing.Size(100, 27);
-   this.tsHledat.TextChanged += new System.EventHandler(this.tsHledat_TextChanged);
+   this.tsSpravaVypujcek.Name = "tsSpravaVypujcek";
+   this.tsSpravaVypujcek.Size = new System.Drawing.Size(129, 27);
+   this.tsSpravaVypujcek.Text = "Správa výpůjček";
+   this.tsSpravaVypujcek.Click += new System.EventHandler(this.tsSpravaVypujcek_Click);
    // 
    // FrmCtenari
    // 
@@ -148,5 +157,6 @@ namespace Knihovna2021
   private System.Windows.Forms.ColumnHeader hPrijmeni;
   private System.Windows.Forms.ColumnHeader hDatNar;
   private System.Windows.Forms.ToolStripTextBox tsHledat;
+  private System.Windows.Forms.ToolStripMenuItem tsSpravaVypujcek;
  }
 }

@@ -127,6 +127,11 @@ namespace Knihovna2021
    // numPocetStran
    // 
    this.numPocetStran.Location = new System.Drawing.Point(123, 63);
+   this.numPocetStran.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
    this.numPocetStran.Name = "numPocetStran";
    this.numPocetStran.Size = new System.Drawing.Size(189, 23);
    this.numPocetStran.TabIndex = 18;
