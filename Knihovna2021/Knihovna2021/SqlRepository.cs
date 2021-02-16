@@ -91,5 +91,84 @@ namespace Knihovna2021
     }
    }
   }
+
+  public List<Kniha> NactiKnihy(string sloupecTrideni, bool sestupne, string hledani)
+  {
+   List<Kniha> knihy = new List<Kniha>();
+   using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+   {
+    using (SqlCommand sqlCommand = new SqlCommand("", sqlConnection))
+    {
+     sqlCommand.CommandText = $"select * from Knihy where Nazev like @Hledani order by {sloupecTrideni}{(sestupne ? " desc" : "")}";
+     sqlCommand.Parameters.AddWithValue("Hledani", "%" + hledani + "%");
+     sqlConnection.Open();
+     using (SqlDataReader dataReader = sqlCommand.ExecuteReader())
+     {
+      while (dataReader.Read())
+      {
+       knihy.Add(new Kniha(Convert.ToInt32(dataReader["IdKnihy"]),
+                              dataReader["Nazev"].ToString(),
+                              dataReader["Autor"].ToString(),
+                              Convert.ToInt32(dataReader["PocetStran"]),
+                              dataReader["Zanr"].ToString()));
+      }
+     }
+     sqlConnection.Close();
+    }
+   }
+   return knihy;
+  }
+
+  public void UlozKnihu(Kniha kniha)
+  {
+   if (kniha.Id == 0)
+   {
+    // není v databázi -> budeme ho vytvářet
+    using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+    {
+     using (SqlCommand sqlCommand = new SqlCommand("", sqlConnection))
+     {
+      sqlCommand.CommandText = $"insert into Knihy(Nazev,Autor,PocetStran,Zanr) values(@Nazev,@Autor,{kniha.PocetStran},@Zanr)";
+      sqlCommand.Parameters.AddWithValue("Nazev", kniha.Nazev);
+      sqlCommand.Parameters.AddWithValue("Autor", kniha.Autor);
+      sqlCommand.Parameters.AddWithValue("Zanr", kniha.Zanr);
+      sqlConnection.Open();
+      sqlCommand.ExecuteNonQuery();
+      sqlConnection.Close();
+     }
+    }
+   }
+   else
+   {
+    //pouze update
+    using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+    {
+     using (SqlCommand sqlCommand = new SqlCommand("", sqlConnection))
+     {
+      sqlCommand.CommandText = $"update Knihy set Nazev=@Nazev ,Autor=@Autor,PocetStran={kniha.PocetStran},Zanr=@Zanr where IdKnihy={kniha.Id}";
+      sqlCommand.Parameters.AddWithValue("Nazev", kniha.Nazev);
+      sqlCommand.Parameters.AddWithValue("Autor", kniha.Autor);
+      sqlCommand.Parameters.AddWithValue("Zanr", kniha.Zanr);
+      sqlConnection.Open();
+      sqlCommand.ExecuteNonQuery();
+      sqlConnection.Close();
+     }
+    }
+   }
+  }
+
+  public void SmazKnihu(Kniha kniha)
+  {
+   using (SqlConnection sqlConnection = new SqlConnection(ConnectionString))
+   {
+    using (SqlCommand sqlCommand = new SqlCommand("", sqlConnection))
+    {
+     sqlCommand.CommandText = $"delete from Knihy where IdKnihy={kniha.Id}";
+     sqlConnection.Open();
+     sqlCommand.ExecuteNonQuery();
+     sqlConnection.Close();
+    }
+   }
+  }
  }
 }
